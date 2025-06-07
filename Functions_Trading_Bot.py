@@ -6,9 +6,38 @@ risk_fraction = 0.001
 volume = 0.1
 
 # mt5 initialization
-if not Required_libraries.mt5.initialize():
+if not Required_libraries.mt5.initialize(): 
     print("Failed to initialize MetaTrader5, error code =", Required_libraries.mt5.last_error())
     quit()
+
+def read_and_clear_signal(path="signal.txt"):
+    if not Required_libraries.os.path.exists(path):
+        return None  # file does not exist
+    
+    try:
+        with open(path, "r+") as f:
+            content = f.read().strip()
+            if content == "":
+                return None  # file is empty
+
+            # Save the number
+            signal = int(content)
+
+            # Empty the file
+            f.seek(0)
+            f.truncate()
+
+            return signal
+    except Exception as e:
+        print("Error reading signal", e)
+        return None
+
+def Get_the_current_price():
+    tick = Required_libraries.mt5.symbol_info_tick(symbol)
+    bid = tick.bid
+    ask = tick.ask
+    mid_price = (bid + ask) / 2
+    return mid_price
 
 def calculate_the_percentage_change_in_price(predicted_price, current_price):
     Percentage_change_in_price = (abs(predicted_price - current_price) / current_price) * 100
@@ -44,7 +73,7 @@ def open_position(action, tp_price, sl_price):
         "magic": 123456,
         "comment": "Python script open",
         "type_time": Required_libraries.mt5.ORDER_TIME_GTC,
-        "type_filling": Required_libraries.mt5.ORDER_FILLING_IOC,
+        "type_filling": Required_libraries.mt5.symbol_info(symbol).filling_mode,
     }
     result = Required_libraries.mt5.order_send(request)
     return result
