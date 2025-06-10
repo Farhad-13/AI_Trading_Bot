@@ -1,10 +1,8 @@
 import Required_libraries
 import Functions_Trading_Bot
 
-# Initial values
-symbol = "XAUUSD"
-risk_fraction = 0.001
-volume = 0.1
+# Running the technical analysis engine
+Required_libraries.subprocess.Popen(['python', 'Technical_Analysis_Engine.py'], creationflags=Required_libraries.subprocess.CREATE_NEW_CONSOLE)
 
 # mt5 initialization
 if not Required_libraries.mt5.initialize():
@@ -17,8 +15,8 @@ while True:
     signal = Functions_Trading_Bot.read_and_clear_signal()
 
     if signal is not None:
-        predicted_price = signal
-        current_price = Functions_Trading_Bot.Get_the_current_price()
+        predicted_price = signal['predicted_price']
+        current_price = Functions_Trading_Bot.Get_the_current_price(signal['symbol'])
 
         ##########################################################
         # Making a decision to either open a position or do nothing — and acting on it
@@ -28,8 +26,8 @@ while True:
             if predicted_price > current_price:
                 action = Required_libraries.mt5.ORDER_TYPE_BUY
                 tp_price = predicted_price - 0.01
-                sl_price = Functions_Trading_Bot.calculate_stop_loss(current_price)
-                result = Functions_Trading_Bot.open_position(action, tp_price, sl_price)
+                sl_price = Functions_Trading_Bot.calculate_stop_loss(current_price, action, signal['symbol'], signal['risk_fraction'], signal['volume'])
+                result = Functions_Trading_Bot.open_position(action, tp_price, sl_price, signal['symbol'], signal['volume'])
                 if result.retcode == Required_libraries.mt5.TRADE_RETCODE_DONE:
                     print("long position opened successfully")
                 else:
@@ -38,8 +36,8 @@ while True:
             else:
                 action = Required_libraries.mt5.ORDER_TYPE_SELL
                 tp_price = predicted_price + 0.01
-                sl_price = Functions_Trading_Bot.calculate_stop_loss(current_price)
-                result = Functions_Trading_Bot.open_position(action, tp_price, sl_price)
+                sl_price = Functions_Trading_Bot.calculate_stop_loss(current_price, action, signal['symbol'], signal['risk_fraction'], signal['volume'])
+                result = Functions_Trading_Bot.open_position(action, tp_price, sl_price, signal['symbol'], signal['volume'])
                 if result.retcode == Required_libraries.mt5.TRADE_RETCODE_DONE:
                     print("short position opened successfully")
                 else:

@@ -8,5 +8,9 @@ import Functions_Technical_Analysis_Engine
 
 # This file predicts the price and sends it to the robot whenever it wants
 # like this
-signal = 4000
-Functions_Technical_Analysis_Engine.send_signal(signal)
+predicted_price = 4000
+symbol = "XAUUSD"
+risk_fraction = 0.001
+volume = 0.1
+
+Functions_Technical_Analysis_Engine.send_signal(predicted_price, symbol, risk_fraction, volume)
