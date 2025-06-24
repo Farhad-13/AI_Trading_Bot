@@ -15,6 +15,7 @@ while True:
     signal = Functions_Trading_Bot.read_and_clear_signal()
 
     if signal is not None:
+        print("A signal has been received")
         predicted_price = signal['predicted_price']
         current_price = Functions_Trading_Bot.Get_the_current_price(signal['symbol'])
 
@@ -46,8 +47,8 @@ while True:
         else: 
             print("price change is less than 0.5%, no position opened.")
 
-        ############################################
-        # to do -> Send work report
+        print("")
+        print("")
 
     Required_libraries.time.sleep(1) 
 
