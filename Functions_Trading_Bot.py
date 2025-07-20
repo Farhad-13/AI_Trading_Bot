@@ -4,27 +4,31 @@ import Required_libraries
 if not Required_libraries.mt5.initialize(): 
     print("Failed to initialize MetaTrader5, error code =", Required_libraries.mt5.last_error())
     quit()
+    
+def read_and_clear_signal(symbol):
+    path = f"signals/{symbol}.txt"
 
-def read_and_clear_signal(path="signal.txt"):
     if not Required_libraries.os.path.exists(path):
-        return None # file does not exist
+        return None  # File does not exist
 
     try:
         with open(path, "r+") as f:
             content = f.read().strip()
             if content == "":
-                return None # file is empty
+                return None  # File is empty
 
             signal = Required_libraries.json.loads(content)
 
-            # Empty the file
+            # Clear the file content after reading
             f.seek(0)
             f.truncate()
 
             return signal
+
     except Exception as e:
-        print("Error reading signal:", e)
+        print(f"[{symbol}] Error reading signal:", e)
         return None
+
     
 def Get_the_current_price(symbol):
     tick = Required_libraries.mt5.symbol_info_tick(symbol)
