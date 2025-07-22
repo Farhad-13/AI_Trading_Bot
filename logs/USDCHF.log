@@ -1,0 +1,9 @@
+[USDCHF] Signal received
+Traceback (most recent call last):
+  File "E:\AI_Trading_Bot\Trading_Bot.py", line 38, in <module>
+    sl_price = Functions_Trading_Bot.calculate_stop_loss(current_price, action, symbol, signal['risk_fraction'], signal['volume'])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AI_Trading_Bot\Functions_Trading_Bot.py", line 120, in calculate_stop_loss
+    stop_level = symbol_info.trade_stoplevel * point  # Minimum allowed stop loss distance
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'SymbolInfo' object has no attribute 'trade_stoplevel'. Did you mean: 'trade_stops_level'?

@@ -9,8 +9,7 @@ symbol = args.symbol
 
 
 
-# its for test
-risk_fraction = 0.001
+risk_fraction = 0.01
 
 if not Required_libraries.mt5.initialize():
     print("MT5 initialization failed")
@@ -28,14 +27,17 @@ volume = volume_map.get(symbol, 0.1)
 tick = Required_libraries.mt5.symbol_info_tick(symbol)
 if tick:
     current_price = tick.ask
-    predicted_price = current_price + (current_price * 0.5)
-    
+    predicted_price = round(current_price * 1.01, Required_libraries.mt5.symbol_info(symbol).digits)
+        
 else:
     print(f"عدم دریافت قیمت برای {symbol}")
 
 Functions_Technical_Analysis_Engine.send_signal(predicted_price, symbol, risk_fraction, volume)
 
 Required_libraries.mt5.shutdown()
+
+
+
 
 
 

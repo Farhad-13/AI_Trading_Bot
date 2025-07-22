@@ -41,6 +41,9 @@ def calculate_the_percentage_change_in_price(predicted_price, current_price):
     Percentage_change_in_price = (abs(predicted_price - current_price) / current_price) * 100
     return Percentage_change_in_price
 
+# todo: The calculate_stop_lossCopy function returns unreasonable values for some symbols like ["USDCHF", "AUDUSD", "NZDUSD", "WTI"], 
+# which causes an "Invalid stops" error in MetaTrader and prevents opening positions on these symbols.
+# Find the reason for this problem and fix it
 def calculate_stop_loss(current_price, order_type, symbol, risk_fraction, volume):
     # Receive account balance
     account_info = Required_libraries.mt5.account_info()
@@ -89,7 +92,7 @@ def calculate_stop_loss(current_price, order_type, symbol, risk_fraction, volume
 
     stop_loss_move = risk_amount / value_per_price_move
     stop_loss_price = current_price - stop_loss_move if order_type == Required_libraries.mt5.ORDER_TYPE_BUY else current_price + stop_loss_move
-
+    
     return stop_loss_price
 
 def open_position(action, tp_price, sl_price, symbol, volume):
@@ -98,6 +101,19 @@ def open_position(action, tp_price, sl_price, symbol, volume):
         print("Failed to get tick info for symbol: ", symbol)
         return None
     order_price = tick.ask if action == Required_libraries.mt5.ORDER_TYPE_BUY else tick.bid
+
+# This is true, but I don't know why it doesn't work
+# "type_filling": Required_libraries.mt5.ORDER_FILLING_FOK,
+    # info = filling_mode,
+    # filling_mode = info.filling_mode
+    # if filling_mode not in [
+    #     Required_libraries.mt5.ORDER_FILLING_IOC,
+    #     Required_libraries.mt5.ORDER_FILLING_FOK,
+    #     Required_libraries.mt5.ORDER_FILLING_RETURN,
+    # ]:
+    #     print(f"❌ Unsupported filling mode for {symbol}: {filling_mode}")
+    #     return None
+    
     request = {
         "action": Required_libraries.mt5.TRADE_ACTION_DEAL,
         "symbol": symbol,
@@ -110,7 +126,7 @@ def open_position(action, tp_price, sl_price, symbol, volume):
         "magic": 123456,
         "comment": "Python script open",
         "type_time": Required_libraries.mt5.ORDER_TIME_GTC,
-        "type_filling": Required_libraries.mt5.symbol_info(symbol).filling_mode,
+        "type_filling": Required_libraries.mt5.ORDER_FILLING_FOK,
     }
     result = Required_libraries.mt5.order_send(request)
     return result

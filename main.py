@@ -9,30 +9,28 @@
 
 import Required_libraries
 
+# First, we need to add this symbols to Metatrader's watch list
 symbols = [
-    "EURUSD",   # یورو / دلار آمریکا
-    "GBPUSD",   # پوند انگلیس / دلار آمریکا
-    "USDJPY",   # دلار آمریکا / ین ژاپن
-    "USDCHF",   # دلار آمریکا / فرانک سوئیس
-    "AUDUSD",   # دلار استرالیا / دلار آمریکا
-    "USDCAD",   # دلار آمریکا / دلار کانادا
-    "NZDUSD",   # دلار نیوزیلند / دلار آمریکا
-    "XAUUSD",   # طلا / دلار آمریکا
-    "XAGUSD",   # نقره / دلار آمریکا
-    "WTI",      # نفت خام آمریکا
-    "UKOIL",    # نفت خام برنت (دریای شمال)
-    "BTCUSD",   # بیت‌کوین / دلار آمریکا
-    "US30",     # شاخص داوجونز
-    "NAS100",   # شاخص نزدک ۱۰۰
-    "SPX500",   # شاخص S&P 500
-    "DAX40"     # شاخص بورس آلمان (دکس ۴۰)
+    "EURUSD",   # Euro / US Dollar
+    "GBPUSD",   # British Pound / US Dollar
+    "USDJPY",   # US Dollar / Japanese Yen
+    "USDCAD",   # US Dollar / Canadian Dollar
+    "XAUUSD",   # Gold / US Dollar
+    "XAGUSD"   # Silver / US Dollar
 ]
+# The commented symbols were not supported in my broker
+    #"US30",     # Dow Jones index
+    # "UKOIL",    # Brent crude oil (North Sea)
+    # "BTCUSD",   # Bitcoin / USD
+    # "NAS100",   # Nasdaq 100 index
+    # "SPX500",   # S&P 500 index
+    # "DAX40"     # German stock market index (Dex 40)
 
 processes = []
 for symbol in symbols:
     log_file = open(f"logs/{symbol}.log", "w") 
     process = Required_libraries.subprocess.Popen(
-        ["AI_Trading_Bot", "Trading_Bot.py", "--symbol", symbol],
+        ["python", "Trading_Bot.py", "--symbol", symbol],
         stdout=log_file,
         stderr=log_file
     )
